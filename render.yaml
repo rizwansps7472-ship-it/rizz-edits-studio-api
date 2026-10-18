@@ -1,0 +1,31 @@
+# Render blueprint for the Rizz Edits Studio API.
+# Push this repo to GitHub, then on Render: New -> Web Service -> connect repo.
+# Render auto-detects this file. Fill the `sync: false` values in the dashboard.
+services:
+  - type: web
+    name: rizz-edits-studio-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      # Neon (or any) Postgres connection string. Get it free at neon.tech.
+      - key: DATABASE_URL
+        sync: false
+      # The public site origin(s), comma-separated. Example:
+      # https://rizz-edits-studio-xxxxx.muse.ai
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: ADMIN_API_KEY
+        generateValue: true
+      # Resend (resend.com) for inquiry emails — free tier.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      # Your inbox for new-inquiry notifications.
+      - key: NOTIFY_TO
+        sync: false
+      - key: RATE_LIMIT_PER_MINUTE
+        value: 20
